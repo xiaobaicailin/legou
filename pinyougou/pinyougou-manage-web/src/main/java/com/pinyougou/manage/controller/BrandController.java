@@ -21,7 +21,7 @@ public class BrandController {
 
     @GetMapping("/findPage.do")
     public PageInfo<TbBrand> allPage(@RequestParam(defaultValue = "1") Integer pageNum,
-                            @RequestParam(defaultValue = "5") Integer pageSize){
+                                     @RequestParam(defaultValue = "5") Integer pageSize){
         return brandService.findPage(pageNum,pageSize);
     }
 
