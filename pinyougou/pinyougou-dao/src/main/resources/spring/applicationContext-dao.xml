@@ -30,7 +30,16 @@ http://www.springframework.org/schema/context/spring-context.xsd">
         <property name="typeAliasesPackage" value="com.pinyougou.pojo"/>
     </bean>
     <!--  扫描 mapper -->
-    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <!--<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.pinyougou.mapper"/>
+    </bean>-->
+    <bean class="tk.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.pinyougou.mapper"/>
+        <property name="properties">
+            <value>
+                mappers=com.pinyougou.mapper.BaseMapper
+            </value>
+        </property>
     </bean>
+
 </beans>
