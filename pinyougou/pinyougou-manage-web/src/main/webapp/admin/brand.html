@@ -34,14 +34,15 @@
                                 <div class="form-group form-inline">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-default" title="新建" data-toggle="modal" data-target="#editModal" ><i class="fa fa-file-o"></i> 新建</button>
-                                        <button type="button" class="btn btn-default" title="删除" ><i class="fa fa-trash-o"></i> 删除</button>           
+                                        <button type="button" @click="deleteList()" class="btn btn-default" title="删除" ><i class="fa fa-trash-o"></i> 删除</button>
                                         <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
                                     </div>
                                 </div>
                             </div>
                             <div class="box-tools pull-right">
                                 <div class="has-feedback">
-							                                         
+									品牌名称：<input v-model="searchEntity.name"> 品牌首字母：<input v-model="searchEntity.firstChar">
+									<button class="btn btn-default" @click="searchList(1)">查询</button>
                                 </div>
                             </div>
                             <!--工具栏/-->
@@ -51,8 +52,9 @@
 			                      <thead>
 			                          <tr>
 			                              <th class="" style="padding-right:0px">
-			                                  <input id="selall" type="checkbox" class="icheckbox_square-blue">
-			                              </th> 
+			                                  <input id="selall" @click="selectAll()"  v-model="check"  type="checkbox" class="icheckbox_square-blue">
+
+			                               </th> {{check}}
 										  <th class="sorting_asc">品牌ID</th>
 									      <th class="sorting">品牌名称</th>									      
 									      <th class="sorting">品牌首字母</th>									     				
@@ -61,12 +63,13 @@
 			                      </thead>
 			                      <tbody>
 									  <tr v-for="entity in entityList">
-			                              <td><input  type="checkbox"></td>			                              
+			                              <td><input :value="entity.id" v-model="ids"   type="checkbox"></td>
+										  {{ids}}
 				                          <td>{{entity.id}}</td>
 									      <td>{{entity.name}}</td>
 		                                  <td>{{entity.firstChar}}</td>
 		                                  <td class="text-center">                                           
-		                                 	  <button type="button" class="btn bg-olive btn-xs" data-toggle="modal" data-target="#editModal"  >修改</button>                                           
+		                                 	  <button type="button" @click="one(entity.id)" class="btn bg-olive btn-xs" data-toggle="modal" data-target="#editModal"  >修改</button>
 		                                  </td>
 			                          </tr>
 			                      </tbody>
@@ -95,16 +98,16 @@
 			<table class="table table-bordered table-striped"  width="800px">
 		      	<tr>
 		      		<td>品牌名称</td>
-		      		<td><input  class="form-control" placeholder="品牌名称" >  </td>
+		      		<td><input v-model="entity.name" class="form-control" placeholder="品牌名称" >  </td>
 		      	</tr>		      	
 		      	<tr>
 		      		<td>首字母</td>
-		      		<td><input  class="form-control" placeholder="首字母">  </td>
+		      		<td><input v-model="entity.firstChar" class="form-control" placeholder="首字母">  </td>
 		      	</tr>		      	
 			 </table>				
 		</div>
 		<div class="modal-footer">						
-			<button class="btn btn-success" data-dismiss="modal" aria-hidden="true">保存</button>
+			<button class="btn btn-success" @click="save()" data-dismiss="modal" aria-hidden="true">保存</button>
 			<button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
 		</div>
 	  </div>
@@ -112,40 +115,6 @@
 </div>
   </div>
 
-<script type="text/javascript">
-
-	var app = new Vue({
-		el:"#app",
-		data:{
-		    //列表
-			entityList:[],
-			total:0,
-			pageNum:1,
-			pageSize:10
-		},
-		methods:{
-		    searchList:function (pageNum) {
-		        this.pageNum = pageNum;
-				axios.get("../brand/findPage.do?pageNum="+this.pageNum+"&pageSize="+this.pageSize).then(function (response) {
-					app.entityList = response.data.list;
-					app.total = response.data.total;
-                }).catch(function () {
-					alert("请求失败！！！！！！")
-                });
-            }
-		},
-		created(){
-		   /* axios.get("../brand/findAll.do").then(function (response) {
-				console.log(response);
-				app.entityList = response.data;
-            }).catch(function () {
-				//网络中断
-				alert("获取数据失败！！");
-            });*/
-		   //刚进来调用
-			this.searchList(app.pageNum);
-		}
-	});
-</script>
+<script type="text/javascript" src="/js/controller/brandController.js"></script>
 </body>
 </html>
