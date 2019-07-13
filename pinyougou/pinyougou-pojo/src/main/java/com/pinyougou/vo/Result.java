@@ -2,22 +2,22 @@ package com.pinyougou.vo;
 
 public class Result {
     private String message;
-    private String successful;
+    private String success;
 
     public Result() {
     }
 
-    public Result(String message, String successful) {
+    public Result(String message, String success) {
         this.message = message;
-        this.successful = successful;
+        this.success = success;
     }
 
     public static Result ok(){
-        return new Result("添加成功","true");
+        return new Result("成功","true");
     }
 
     public static Result fail(){
-        return new Result("添加失败","false");
+        return new Result("失败","false");
     }
 
     public String getMessage() {
@@ -28,11 +28,11 @@ public class Result {
         this.message = message;
     }
 
-    public String getSuccessful() {
-        return successful;
+    public String getSuccess() {
+        return success;
     }
 
-    public void setSuccessful(String successful) {
-        this.successful = successful;
+    public void setSuccess(String success) {
+        this.success = success;
     }
 }

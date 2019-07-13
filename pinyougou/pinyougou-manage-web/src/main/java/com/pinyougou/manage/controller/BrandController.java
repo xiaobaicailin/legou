@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/brand")
 @RestController
@@ -16,6 +17,12 @@ public class BrandController {
 
     @Reference
     private BrandService brandService;
+
+        @GetMapping("/selectOptionList.do")
+        public List<Map<String,String>> selectOptionList(){
+             return brandService.findBrand();
+        }
+
 
     @PostMapping("/search.do")
     public PageInfo<TbBrand> search(@RequestParam(defaultValue = "1") Integer pageNum,

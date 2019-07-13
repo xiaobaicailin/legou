@@ -37,7 +37,7 @@ var app = new Vue({
             } else {
                 if (confirm("确定要删除吗？")) {
                     axios.get("../brand/deleteList.do?ids=" + this.ids).then(function (response) {
-                        if (response.data.successful) {
+                        if (response.data.success) {
                             app.searchList(1);
                             app.entity = {};
                             app.ids = [];
@@ -58,7 +58,7 @@ var app = new Vue({
                 method = "add";
             }
             axios.post("../brand/" + method + ".do", this.entity).then(function (response) {
-                if (response.data.successful) {
+                if (response.data.success) {
                     app.searchList(app.pageNum);
                     app.entity = {};
                 } else {
