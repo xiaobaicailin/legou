@@ -5,7 +5,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.math.BigDecimal;
+
 
 @Table(name = "tb_goods")
 public class TbGoods implements Serializable {
@@ -35,7 +35,7 @@ public class TbGoods implements Serializable {
 
     private String smallPic;
 
-    private BigDecimal price;
+    private double price;
 
     private Long typeTemplateId;
 
@@ -141,11 +141,11 @@ public class TbGoods implements Serializable {
         this.smallPic = smallPic;
     }
 
-    public BigDecimal getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
