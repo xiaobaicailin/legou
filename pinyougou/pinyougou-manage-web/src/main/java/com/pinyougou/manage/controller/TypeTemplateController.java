@@ -7,12 +7,19 @@ import com.pinyougou.sellergoods.service.TypeTemplateService;
 import com.pinyougou.vo.Result;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequestMapping("/typeTemplate")
 @RestController
 public class TypeTemplateController {
 
     @Reference
     private TypeTemplateService typeTemplateService;
+
+    @GetMapping("/findAll.do")
+    public List<TbTypeTemplate> findAll(){
+        return typeTemplateService.findAll();
+    }
 
     /**
      * 新增
@@ -24,11 +31,11 @@ public class TypeTemplateController {
         try {
             typeTemplateService.add(typeTemplate);
 
-            return Result.ok();
+            return Result.ok("成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Result.fail();
+        return Result.fail("失败");
     }
 
     /**
@@ -50,11 +57,11 @@ public class TypeTemplateController {
     public Result update(@RequestBody TbTypeTemplate typeTemplate){
         try {
             typeTemplateService.update(typeTemplate);
-            return Result.ok();
+            return Result.ok("成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Result.fail();
+        return Result.fail("失败");
     }
 
     /**
@@ -66,11 +73,11 @@ public class TypeTemplateController {
     public Result delete(Long[] ids){
         try {
             typeTemplateService.deleteByIds(ids);
-            return Result.ok();
+            return Result.ok("成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Result.fail();
+        return Result.fail("失败");
     }
 
     /**

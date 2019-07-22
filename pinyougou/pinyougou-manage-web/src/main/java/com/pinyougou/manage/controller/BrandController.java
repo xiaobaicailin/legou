@@ -34,11 +34,11 @@ public class BrandController {
     public Result deleteList(Long[] ids){
         try {
             brandService.deleteByIds(ids);
-            return Result.ok();
+            return Result.ok("成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Result.fail();
+        return Result.fail("失败");
     }
 
 
@@ -51,11 +51,11 @@ public class BrandController {
     public Result update(@RequestBody TbBrand tbBrand){
         try {
             brandService.update(tbBrand);
-            return Result.ok();
+            return Result.ok("成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return  Result.fail();
+        return  Result.fail("失败");
     }
 
 
@@ -78,11 +78,11 @@ public class BrandController {
     public Result add(@RequestBody TbBrand tbBrand){
         try {
             brandService.add(tbBrand);
-            return Result.ok();
+            return Result.ok("成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Result.fail();
+        return Result.fail("失败");
     }
 
  /*   *//**

@@ -34,11 +34,11 @@ public class SpecificationController {
     public Result add(@RequestBody Specification specification){
         try {
             specificationService.addSpecification(specification);
-            return Result.ok();
+            return Result.ok("成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Result.fail();
+        return Result.fail("失败");
     }
 
     /**
@@ -60,11 +60,11 @@ public class SpecificationController {
     public Result update(@RequestBody Specification specification){
         try {
             specificationService.updateSpecification(specification);
-            return Result.ok();
+            return Result.ok("成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Result.fail();
+        return Result.fail("失败");
     }
 
     /**
@@ -76,11 +76,11 @@ public class SpecificationController {
     public Result delete(Long[] ids){
         try {
             specificationService.deleteSpecAndOpt(ids);
-            return Result.ok();
+            return Result.ok("成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Result.fail();
+        return Result.fail("失败");
     }
 
     /**

@@ -12,12 +12,12 @@ public class Result {
         this.success = success;
     }
 
-    public static Result ok(){
-        return new Result("成功","true");
+    public static Result ok(String msg){
+        return new Result(msg,"true");
     }
 
-    public static Result fail(){
-        return new Result("失败","false");
+    public static Result fail(String msg){
+        return new Result(msg,"false");
     }
 
     public String getMessage() {

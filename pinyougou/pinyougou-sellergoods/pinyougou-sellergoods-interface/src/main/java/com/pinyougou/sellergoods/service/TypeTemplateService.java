@@ -5,6 +5,7 @@ import com.pinyougou.pojo.TbTypeTemplate;
 import com.pinyougou.service.BaseService;
 
 import java.util.List;
+import java.util.Map;
 
 public interface TypeTemplateService extends BaseService<TbTypeTemplate> {
     /**
@@ -16,4 +17,5 @@ public interface TypeTemplateService extends BaseService<TbTypeTemplate> {
      */
     PageInfo<TbTypeTemplate> search(Integer pageNum, Integer pageSize, TbTypeTemplate typeTemplate);
 
+    List<Map> findSpecList(Long id);
 }

@@ -24,11 +24,11 @@ public class SellerController {
         try {
             sellerService.add(seller);
 
-            return Result.ok();
+            return Result.ok("成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Result.fail();
+        return Result.fail("失败");
     }
 
     /**
@@ -50,11 +50,11 @@ public class SellerController {
     public Result update(@RequestBody TbSeller seller){
         try {
             sellerService.update(seller);
-            return Result.ok();
+            return Result.ok("成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Result.fail();
+        return Result.fail("失败");
     }
 
     /**
@@ -66,11 +66,11 @@ public class SellerController {
     public Result delete(String[] ids){
         try {
             sellerService.deleteByIds(ids);
-            return Result.ok();
+            return Result.ok("成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Result.fail();
+        return Result.fail("失败");
     }
 
     /**

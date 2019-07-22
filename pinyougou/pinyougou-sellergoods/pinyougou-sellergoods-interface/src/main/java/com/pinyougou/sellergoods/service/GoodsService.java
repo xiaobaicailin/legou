@@ -3,6 +3,7 @@ package com.pinyougou.sellergoods.service;
 import com.github.pagehelper.PageInfo;
 import com.pinyougou.pojo.TbGoods;
 import com.pinyougou.service.BaseService;
+import com.pinyougou.vo.Goods;
 
 import java.util.List;
 
@@ -16,4 +17,13 @@ public interface GoodsService extends BaseService<TbGoods> {
      */
     PageInfo<TbGoods> search(Integer pageNum, Integer pageSize, TbGoods goods);
 
+    void addGoods(Goods goods);
+
+    void updateStatus(String status,Long[] ids);
+
+    Goods findGoods(Long id);
+
+    void updateGoods(Goods goods);
+
+    void deleteGoods(Long[] ids);
 }

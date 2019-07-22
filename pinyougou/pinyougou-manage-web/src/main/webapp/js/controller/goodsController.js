@@ -316,6 +316,6 @@ var goodsControllerMixin = {
         }
     },
     created: function () {
-        //this.searchList(this.pageNum);
+       // this.searchList(this.pageNum);
     }
 };

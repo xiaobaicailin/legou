@@ -24,11 +24,11 @@ public class SpecificationOptionController {
         try {
             specificationOptionService.add(specificationOption);
 
-            return Result.ok();
+            return Result.ok("成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Result.fail();
+        return Result.fail("失败");
     }
 
     /**
@@ -50,11 +50,11 @@ public class SpecificationOptionController {
     public Result update(@RequestBody TbSpecificationOption specificationOption){
         try {
             specificationOptionService.update(specificationOption);
-            return Result.ok();
+            return Result.ok("成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Result.fail();
+        return Result.fail("失败");
     }
 
     /**
@@ -66,11 +66,11 @@ public class SpecificationOptionController {
     public Result delete(Long[] ids){
         try {
             specificationOptionService.deleteByIds(ids);
-            return Result.ok();
+            return Result.ok("成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Result.fail();
+        return Result.fail("失败");
     }
 
     /**
