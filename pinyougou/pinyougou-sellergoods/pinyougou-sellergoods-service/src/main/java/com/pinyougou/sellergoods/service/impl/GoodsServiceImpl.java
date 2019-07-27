@@ -172,25 +172,35 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
             tbItem.setStatus("0");
         }
         Example example1 = new Example(TbItem.class);
-        example.createCriteria().andIn("goodsId",Arrays.asList(ids));
+        example1.createCriteria().andIn("goodsId",Arrays.asList(ids));
 
-        itemMapper.updateByExampleSelective(tbItem,example );
+        itemMapper.updateByExampleSelective(tbItem,example1 );
     }
 
     @Override
     public Goods findGoods(Long id) {
+        return findGoodsByIdAndStatus(id,null );
+    }
+
+    @Override
+    public Goods findGoodsByIdAndStatus(Long goodsId, String status) {
         Goods goods = new Goods();
 
-        TbGoods tbGoods = findOne(id);
+        TbGoods tbGoods = findOne(goodsId);
         goods.setGoods(tbGoods);
 
-        TbGoodsDesc tbGoodsDesc = goodsDescMapper.selectByPrimaryKey(id);
+        TbGoodsDesc tbGoodsDesc = goodsDescMapper.selectByPrimaryKey(goodsId);
         goods.setGoodsDesc(tbGoodsDesc);
 
-        TbItem tbItem = new TbItem();
-        tbItem.setGoodsId(id);
-        List<TbItem> tbItems = itemMapper.select(tbItem);
-        goods.setItemList(tbItems);
+        Example example = new Example(TbItem.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("goodsId",goodsId);
+        if (status!=null){
+            criteria.andEqualTo("status",status);
+        }
+        example.orderBy("isDefault").desc();
+        List<TbItem> itemList = itemMapper.selectByExample(example);
+        goods.setItemList(itemList);
 
 
         return goods;
@@ -219,6 +229,13 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         TbGoods tbGoods = new TbGoods();
         tbGoods.setIsDelete("1");
         goodsMapper.updateByExampleSelective(tbGoods,example);
+    }
+
+    @Override
+    public List<TbItem> findGoodsByids(Long[] ids) {
+        Example example = new Example(TbItem.class);
+        example.createCriteria().andIn("goodsId",Arrays.asList(ids)).andEqualTo("status","1");
+        return itemMapper.selectByExample(example);
     }
 
     private void saveValue(Goods goods,TbItem tbItem){

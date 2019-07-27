@@ -23,5 +23,22 @@
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
+    <!-- ActiveMQ 依赖 -->
+    <dependencies>
+    <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>activemq-client</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>javax.jms</groupId>
+        <artifactId>javax.jms-api</artifactId>
+    </dependency>
+    <!-- 加入 spring-jms 依赖 -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-jms</artifactId>
+    </dependency>
+    </dependencies>
+
 
 </project>

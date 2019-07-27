@@ -1,13 +1,22 @@
 package com.pinyougou.manage.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageInfo;
 import com.pinyougou.pojo.TbGoods;
+import com.pinyougou.pojo.TbItem;
 import com.pinyougou.sellergoods.service.GoodsService;
 import com.pinyougou.vo.Goods;
 import com.pinyougou.vo.Result;
+import org.apache.activemq.command.ActiveMQQueue;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jms.core.JmsTemplate;
+import org.springframework.jms.core.MessageCreator;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import javax.jms.*;
+import java.util.List;
 
 @RequestMapping("/goods")
 @RestController
@@ -16,11 +25,41 @@ public class GoodsController {
     @Reference
     private GoodsService goodsService;
 
+    @Autowired
+    private JmsTemplate jmsTemplate;
+
+    @Autowired
+    private Destination itemEsQueue;
+
+    @Autowired
+    private Destination itemEsDeleteQueue;
+
+    @Autowired
+    private Destination itemTopic;
+
+    @Autowired
+    private Destination itemDeleteTopic;
+
     @GetMapping("/updateStatus")
     public Result updateStatus(String status,Long[] ids){
 
         try {
             goodsService.updateStatus(status,ids);
+            if ("2".equals(status)){
+               List<TbItem> itemList = goodsService.findGoodsByids(ids);
+
+                //更新搜索系统数据；发送MQ消息
+                //itemSearchService.importItemList(itemList);
+                jmsTemplate.send(itemEsQueue, new MessageCreator() {
+                    @Override
+                    public Message createMessage(Session session) throws JMSException {
+                        TextMessage textMessage = session.createTextMessage();
+                        textMessage.setText(JSON.toJSONString(itemList));
+                        return textMessage;
+                    }
+                });
+                    sendMQMsg(itemTopic,ids );
+            }
           return   Result.ok("成功");
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,11 +123,30 @@ public class GoodsController {
     public Result delete(Long[] ids){
         try {
             goodsService.deleteGoods(ids);
+            //itemSearchService.deleteItemByIds(ids);
+            sendMQMsg(itemEsDeleteQueue,ids );
+            sendMQMsg(itemDeleteTopic,ids );
             return Result.ok("成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
         return Result.fail("失败");
+    }
+
+    /**
+     * 发送消息到MQ
+     * @param destination 模式（队列、主题）
+     * @param ids 商品spu id数组
+     */
+    private void sendMQMsg(Destination destination, Long[] ids) {
+        jmsTemplate.send(destination, new MessageCreator() {
+            @Override
+            public Message createMessage(Session session) throws JMSException {
+                ObjectMessage objectMessage = session.createObjectMessage();
+                objectMessage.setObject(ids);
+                return objectMessage;
+            }
+        });
     }
 
     /**

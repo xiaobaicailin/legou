@@ -11,6 +11,12 @@ var app = new Vue({
                 app.contentData[categoryId] = response.data;
             });
 
+        },
+        //根据搜索关键字跳转到搜索系统进行搜索
+        search: function () {
+            location.href=
+                "http://search.pinyougou.com/search.html?keywords=" +
+                this.keywords;
         }
     },
     created(){

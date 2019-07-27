@@ -2,6 +2,7 @@ package com.pinyougou.sellergoods.service;
 
 import com.github.pagehelper.PageInfo;
 import com.pinyougou.pojo.TbGoods;
+import com.pinyougou.pojo.TbItem;
 import com.pinyougou.service.BaseService;
 import com.pinyougou.vo.Goods;
 
@@ -26,4 +27,8 @@ public interface GoodsService extends BaseService<TbGoods> {
     void updateGoods(Goods goods);
 
     void deleteGoods(Long[] ids);
+
+    List<TbItem> findGoodsByids(Long[] ids);
+
+    Goods findGoodsByIdAndStatus(Long goodsId, String s);
 }

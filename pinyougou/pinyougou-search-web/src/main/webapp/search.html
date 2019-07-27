@@ -77,8 +77,8 @@
 									<form action="" class="sui-form form-inline">
 										<!--searchAutoComplete-->
 										<div class="input-append">
-											<input v-model="searchMap.keyword" type="text" id="autocomplete" class="input-error input-xxlarge" />
-											<button @click="search()" class="sui-btn btn-xlarge btn-danger" type="button">搜索</button>
+											<input v-model="searchMap.keywords" type="text" id="autocomplete" class="input-error input-xxlarge" />
+											<button @click="searchMap.pageNo=1;search()" class="sui-btn btn-xlarge btn-danger" type="button">搜索</button>
 										</div>
 									</form>
 								</div>
@@ -149,11 +149,11 @@
 					</li>									
 				</ul>
 				<ul class="tags-choose">
-					<li class="tag">商品分类：手机<i class="sui-icon icon-tb-close"></i></li>
-					<li class="tag">品牌：华为<i class="sui-icon icon-tb-close"></i></li>
-					<li class="tag">内存：16G<i class="sui-icon icon-tb-close"></i></li>
-					<li class="tag">价格：500-1000<i class="sui-icon icon-tb-close"></i></li>
-					搜索结果：0条
+					<li v-if="searchMap.category!=''" @click="removeSearchItem('category')" class="tag">分类：{{searchMap.category}}<i class="sui-icon icon-tb-close"></i></li>
+					<li v-if="searchMap.brand!=''" @click="removeSearchItem('brand')" class="tag">品牌：{{searchMap.brand}}<i class="sui-icon icon-tb-close"></i></li>
+					<li v-for="(value,key) in searchMap.spec" @click="removeSearchItem(key)" class="tag">{{key}}：{{value}}<i class="sui-icon icon-tb-close"></i></li>
+					<li v-if="searchMap.price!=''" @click="removeSearchItem('price')" class="tag">价格：{{searchMap.price}}<i class="sui-icon icon-tb-close"></i></li>
+					搜索结果：{{resultMap.total}}条
 				</ul>
 				
 				<div class="clearfix"></div>
@@ -162,7 +162,7 @@
 			<div class="clearfix selector">
 				<div class="type-wrap">
 					<div class="fl key">商品分类</div>
-                        <div class="fl value">
+                        <div v-if="searchMap.category==''" class="fl value">
                         <span>
                             <a href="#" @click="addSearchItem('category','手机')">手机</a>
                         </span>
@@ -174,7 +174,7 @@
 				</div>
 				<div class="type-wrap logo">
 					<div class="fl key brand">品牌</div>
-					<div class="value logos">
+					<div v-if="searchMap.brand==''" class="value logos">
 						<ul class="logo-list">
                             <li><a href="#" @click="addSearchItem('brand','联想')">联想</a></li>
                             <li><a href="#" @click="addSearchItem('brand','三星')">三星</a></li>
@@ -239,7 +239,7 @@
 				<div class="type-wrap">
 					<div class="fl key">价格</div>
 					<div class="fl value">
-						<ul class="type-list">
+						<ul v-if="searchMap.price==''" class="type-list">
 							<li>
 								<a href="#" @click="addSearchItem('price','0-500')">0-500元</a>
 							</li>
@@ -294,22 +294,22 @@
 					<div class="navbar-inner filter">
 						<ul class="sui-nav">
 							<li class="active">
-								<a href="#">综合</a>
+								<a @click.prevent="sortSearch('','')" href="#">综合</a>
 							</li>
 							<li>
 								<a href="#">销量</a>
 							</li>
 							<li>
-								<a href="#">新品</a>
+								<a @click.prevent="sortSearch('updateTime','DESC')" href="#">新品</a>
 							</li>
 							<li>
 								<a href="#">评价</a>
 							</li>
 							<li>
-								<a href="#">价格↑</a>
+								<a @click.prevent="sortSearch('price','ASC')" href="#">价格↑</a>
 							</li>
 							<li>
-								<a href="#">价格↓</a>
+								<a @click.prevent="sortSearch('price','DESC')" href="#">价格↓</a>
 							</li>
 						</ul>
 					</div>
@@ -319,7 +319,7 @@
 						<li v-for="item in resultMap.itemList" class="yui3-u-1-5">
 							<div class="list-wrap">
 								<div class="p-img">
-									<a href="item.html" target="_blank"><img :src="item.image" /></a>
+									<a :href="'http://item.pinyougou.com/'+item.goodsId+'.html'" target="_blank"><img :src="item.image" /></a>
 								</div>
 								<div class="price">
 									<strong>
@@ -356,33 +356,23 @@
 				<div class="fr page">
 					<div class="sui-pagination pagination-large">
 						<ul>
-							<li class="prev disabled">
-								<a href="#">«上一页</a>
+							<li :class="['prev',searchMap.pageNo<=1?'disabled':'']">
+								<a @click.prevent="queryByPageNo(searchMap.pageNo-1)" href="#">«上一页</a>
 							</li>
-							<li class="active">
-								<a href="#">1</a>
+							<li v-if="frontDot" class="dotted"><span>...</span></li>
+							<li v-for="pn in pageNoList" :class="searchMap.pageNo==pn?'active':''">
+								<a @click.prevent="queryByPageNo(pn)" href="#">{{pn}}</a>
 							</li>
-							<li>
-								<a href="#">2</a>
-							</li>
-							<li>
-								<a href="#">3</a>
-							</li>
-							<li>
-								<a href="#">4</a>
-							</li>
-							<li>
-								<a href="#">5</a>
-							</li>
-							<li class="dotted"><span>...</span></li>
-							<li class="next">
-								<a href="#">下一页»</a>
+
+							<li v-if="backDot" class="dotted"><span>...</span></li>
+							<li :class="['next',searchMap.pageNo>=resultMap.totalPages?'disabled':'']">
+								<a @click.prevent="queryByPageNo(searchMap.pageNo+1)" href="#">下一页»</a>
 							</li>
 						</ul>
-						<div><span>共10页&nbsp;</span><span>
+						<div><span>共{{resultMap.totalPages}}页&nbsp;</span><span>
       到第
-      <input type="text" class="page-num">
-      页 <button class="page-confirm" onclick="alert(1)">确定</button></span></div>
+      <input v-model.number="searchMap.pageNo" type="text" class="page-num">
+      页 <button class="page-confirm" @click="queryByPageNo(searchMap.pageNo)">确定</button></span></div>
 					</div>
 				</div>
 			</div>
